@@ -40,21 +40,6 @@ class Cube:
 
         self.edges = []
 
-        # self.edges.append((self.vertices[0], self.vertices[1]))
-        # self.edges.append((self.vertices[1], self.vertices[2]))
-        # self.edges.append((self.vertices[2], self.vertices[3]))
-        # self.edges.append((self.vertices[3], self.vertices[0]))
-
-        # self.edges.append((self.vertices[4], self.vertices[5]))
-        # self.edges.append((self.vertices[5], self.vertices[6]))
-        # self.edges.append((self.vertices[6], self.vertices[7]))
-        # self.edges.append((self.vertices[7], self.vertices[4]))
-                          
-        # self.edges.append((self.vertices[0], self.vertices[4]))
-        # self.edges.append((self.vertices[1], self.vertices[5]))
-        # self.edges.append((self.vertices[2], self.vertices[6]))
-        # self.edges.append((self.vertices[3], self.vertices[7]))
-
         for i in range(0, len(self.vertices), 2):
             self.edges.append((self.vertices[i], self.vertices[i + 1]))
 

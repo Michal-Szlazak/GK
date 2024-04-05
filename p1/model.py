@@ -18,11 +18,11 @@ class Model:
 
     def __init__(self):
 
-        block_1 = Cube("block_1")
-        block_2 = Cube("block_2")
-        block_3 = Cube("block_3")
-        block_4 = Cube("block_4")
-        pyramid = Cube("pyramid")
+        block_1 = Cube("objects/block_1")
+        block_2 = Cube("objects/block_2")
+        block_3 = Cube("objects/block_3")
+        block_4 = Cube("objects/block_4")
+        pyramid = Cube("objects/pyramid")
         
 
         self.models.append(block_1)
@@ -90,7 +90,7 @@ class Model:
         for model in self.models:
             model.print_vertices()
 
-    def print(self, window, font):
+    def print(self, window):
         for model in self.models:
             model.create_edges_3d()
             model.clip_edges(0.1, 1000)

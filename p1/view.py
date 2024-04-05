@@ -1,10 +1,7 @@
-from time import sleep
 import pygame
 import sys
-import math
-
 from model import Model
-from cube import Cube
+
 
 WIDTH, HEIGHT = 600, 600
 BLACK = (0, 0, 0)
@@ -86,7 +83,7 @@ def main():
                     
         clock.tick(60) # 60 FPS
         window.fill(BLACK)
-        model.print(window, font)
+        model.print(window)
 
 
         pygame.display.flip()
