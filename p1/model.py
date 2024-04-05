@@ -1,26 +1,29 @@
 from cube import Cube
+from cuber import Cuber
 import math
+
+WHITE = (255, 255, 255)
 
 class Model:
 
     models = []
     fov = 90
 
-    aspect_ratio = 1
-    rotate_x_val = 1
-    rotate_y_val = 1
-    rotate_z_val = 1
-    move_x_val = 1
-    move_y_val = 1
-    move_z_val = 1
+    aspect_ratio = 2
+    rotate_x_val = 2
+    rotate_y_val = 2
+    rotate_z_val = 2
+    move_x_val = 5
+    move_y_val = 3
+    move_z_val = 3
 
     def __init__(self):
 
-        cube = Cube("cube")
-        block_1 = Cube("block_1")
-        block_2 = Cube("block_2")
-        block_3 = Cube("block_3")
-        block_4 = Cube("block_4")
+        cube = Cuber("cube")
+        block_1 = Cuber("block_1")
+        block_2 = Cuber("block_2")
+        block_3 = Cuber("block_3")
+        block_4 = Cuber("block_4")
 
         self.models.append(cube)
         self.models.append(block_1)
@@ -76,10 +79,21 @@ class Model:
         for model in self.models:
             model.rotate(0, 0, -math.radians(self.rotate_z_val))
 
-    def print(self, window):
+    def zoom_in(self):
+        self.fov -= 1
+    
+    def zoom_out(self):
+        self.fov += 1
+
+    def print_vertices(self):
         for model in self.models:
-            model.project(math.radians(self.fov), self.aspect_ratio, 1, 1000)
-            model.create_edges()
-            model.clip_edges()
+            model.print_vertices()
+
+    def print(self, window, font):
+        for model in self.models:
+            model.create_edges_3d()
+            model.clip_edges(0.1, 1000)
+            model.get_clipped_vertices()
+            model.project(math.radians(self.fov), 1, 0.1, 1000)
             model.map_to_screen_space()
-            model.draw_cube(window)
+            model.draw_edges(window, WHITE)

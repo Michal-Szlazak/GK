@@ -4,6 +4,7 @@ import sys
 import math
 
 from model import Model
+from cuber import Cuber
 
 WIDTH, HEIGHT = 600, 600
 BLACK = (0, 0, 0)
@@ -19,8 +20,11 @@ def main():
     pygame.init()
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pygame Window")
+    font = pygame.font.Font(None, 14)
 
     clock = pygame.time.Clock()
+
+    cuber = Cuber("cube")
 
     running = True
     while running:
@@ -70,18 +74,18 @@ def main():
         elif keys_pressed[pygame.K_r]:
             model.print(window)
 
-        elif keys_pressed[pygame.K_f]:
-            print("fov: ", fov)
-            fov -= 10
-            
-        elif keys_pressed[pygame.K_g]:
-            print("fov: ", fov)
-            fov += 10
+        elif keys_pressed[pygame.K_EQUALS]:
+            model.zoom_in()
+
+        elif keys_pressed[pygame.K_MINUS]:
+            model.zoom_out()
+
+        elif keys_pressed[pygame.K_p]:
+            model.print_vertices()
                     
         clock.tick(60) # 60 FPS
         window.fill(BLACK)
-        model.print(window)
-        
+        model.print(window, font)
 
 
         pygame.display.flip()
