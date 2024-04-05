@@ -4,7 +4,7 @@ import sys
 import math
 
 from model import Model
-from cuber import Cuber
+from cube import Cube
 
 WIDTH, HEIGHT = 600, 600
 BLACK = (0, 0, 0)
@@ -23,8 +23,6 @@ def main():
     font = pygame.font.Font(None, 14)
 
     clock = pygame.time.Clock()
-
-    cuber = Cuber("cube")
 
     running = True
     while running:
@@ -82,6 +80,9 @@ def main():
 
         elif keys_pressed[pygame.K_p]:
             model.print_vertices()
+
+        elif keys_pressed[pygame.K_r]:
+            model = Model()
                     
         clock.tick(60) # 60 FPS
         window.fill(BLACK)

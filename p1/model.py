@@ -1,5 +1,4 @@
 from cube import Cube
-from cuber import Cuber
 import math
 
 WHITE = (255, 255, 255)
@@ -19,17 +18,19 @@ class Model:
 
     def __init__(self):
 
-        cube = Cuber("cube")
-        block_1 = Cuber("block_1")
-        block_2 = Cuber("block_2")
-        block_3 = Cuber("block_3")
-        block_4 = Cuber("block_4")
+        block_1 = Cube("block_1")
+        block_2 = Cube("block_2")
+        block_3 = Cube("block_3")
+        block_4 = Cube("block_4")
+        pyramid = Cube("pyramid")
+        
 
-        self.models.append(cube)
         self.models.append(block_1)
         self.models.append(block_2)
         self.models.append(block_3)
         self.models.append(block_4)
+        self.models.append(pyramid)
+        
 
     def move_x(self):
         for model in self.models:
