@@ -24,66 +24,76 @@ def main():
     running = True
     while running:
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        event = pygame.event.wait()
 
-        keys_pressed = pygame.key.get_pressed()
-
-        if keys_pressed[pygame.K_LSHIFT] and keys_pressed[pygame.K_UP]:
-            model.move_y()
-
-        elif keys_pressed[pygame.K_LSHIFT] and keys_pressed[pygame.K_DOWN]:
-            model.move_y_neg()
-        
-        elif keys_pressed[pygame.K_UP]:
-            model.move_z_neg()
+        if event.type == pygame.KEYDOWN:
             
-        elif keys_pressed[pygame.K_DOWN]:
-            model.move_z()
+            if event.key == pygame.K_UP and (pygame.key.get_mods() & pygame.KMOD_SHIFT):
+                model.move_y()
+                window.fill(BLACK)
+                model.print(window)
+                pygame.display.flip()
+                continue
             
-        elif keys_pressed[pygame.K_LEFT]:
-            model.move_x()
-            
-        elif keys_pressed[pygame.K_RIGHT]:
-            model.move_x_neg()
+            elif event.key == pygame.K_DOWN and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                model.move_y_neg()
+                window.fill(BLACK)
+                model.print(window)
+                pygame.display.flip()
+                continue
 
-        elif keys_pressed[pygame.K_w]:
-            model.rotate_x_neg()
+            elif event.key == pygame.K_UP:
+                model.move_z_neg()
+                
+            elif event.key == pygame.K_DOWN:
+                model.move_z()
+                
+            elif event.key == pygame.K_LEFT:
+                model.move_x()
+                
+            elif event.key == pygame.K_RIGHT:
+                model.move_x_neg()
 
-        elif keys_pressed[pygame.K_s]:
-            model.rotate_x()
+            elif event.key == pygame.K_w:
+                model.rotate_x_neg()
 
-        elif keys_pressed[pygame.K_a]:
-            model.rotate_y()
+            elif event.key == pygame.K_s:
+                model.rotate_x()
 
-        elif keys_pressed[pygame.K_d]:
-            model.rotate_y_neg()
+            elif event.key == pygame.K_a:
+                model.rotate_y()
 
-        elif keys_pressed[pygame.K_q]:
-            model.rotate_z()
+            elif event.key == pygame.K_d:
+                model.rotate_y_neg()
 
-        elif keys_pressed[pygame.K_e]:
-            model.rotate_z_neg()
+            elif event.key == pygame.K_q:
+                model.rotate_z()
 
-        elif keys_pressed[pygame.K_r]:
+            elif event.key == pygame.K_e:
+                model.rotate_z_neg()
+
+            elif event.key == pygame.K_r:
+                model.print(window)
+
+            elif event.key == pygame.K_EQUALS:
+                model.zoom_in()
+
+            elif event.key == pygame.K_MINUS:
+                model.zoom_out()
+
+            elif event.key == pygame.K_p:
+                model.print_vertices()
+
+            elif event.key == pygame.K_v:
+                model.print_intersection_points()
+
+            elif event.key == pygame.K_r:
+                model = Model()
+
+                
+            window.fill(BLACK)
             model.print(window)
-
-        elif keys_pressed[pygame.K_EQUALS]:
-            model.zoom_in()
-
-        elif keys_pressed[pygame.K_MINUS]:
-            model.zoom_out()
-
-        elif keys_pressed[pygame.K_p]:
-            model.change_paint_mode()
-
-        elif keys_pressed[pygame.K_r]:
-            model = Model()
-         
-        clock.tick(60) # 60 FPS
-        window.fill(BLACK)
-        model.print(window)
+            pygame.display.flip()
 
         pygame.display.flip()
 

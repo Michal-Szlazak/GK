@@ -23,4 +23,10 @@ def perspective_divide(perspective_projection_matrix, v):
     return [v[0] / w, v[1] / w, v[2] / w, w]
 
 def map_to_screen_space(v, WIDTH, HEIGHT):
-    return (v[0] * WIDTH / 2 + WIDTH / 2, v[1] * HEIGHT / 2 + HEIGHT / 2, v[2], v[3])
+
+    v[0] = int(v[0] * WIDTH / 2 + WIDTH / 2)
+    v[1] = int(v[1] * HEIGHT / 2 + HEIGHT / 2)
+    v[2] = int(v[2])
+    v[3] = int(v[3])
+
+    return v
