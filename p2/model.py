@@ -91,7 +91,6 @@ class Model:
         self.fov += 1
 
     def change_paint_mode(self):
-        print("Paint mode changed")
         self.paint = not self.paint
 
     def print_vertices(self):
@@ -107,7 +106,7 @@ class Model:
 
         for model in self.models:
             model.create_edges_3d()
-            model.clip_edges(1, 1000)
+            model.clip_edges(100, 1000)
             model.get_clipped_vertices()
             model.project(math.radians(self.fov), 1, 0.1, 1000)
 
@@ -121,5 +120,5 @@ class Model:
                 model.draw_edges(window, WHITE)
 
         if self.paint:
-            self.painter.paint_walls(model, window, (120, 60, 100))
+            self.painter.paint_walls(window, (120, 60, 100))
             # model.draw_edges(window, WHITE)

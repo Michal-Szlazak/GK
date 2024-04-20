@@ -83,6 +83,9 @@ def main():
 
             elif event.key == pygame.K_p:
                 model.print_vertices()
+                
+            elif event.key == pygame.K_LCTRL:
+                model.change_paint_mode()
 
             elif event.key == pygame.K_v:
                 model.print_intersection_points()
