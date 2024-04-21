@@ -23,17 +23,14 @@ class Model:
     def __init__(self):
 
         block_1 = Cube("objects/block_1")
-        # block_2 = Cube("objects/block_2")
-        # block_3 = Cube("objects/block_3")
-        # block_4 = Cube("objects/block_4")
-        # pyramid = Cube("objects/pyramid")
-        
+        block_2 = Cube("objects/block_2")
+        block_3 = Cube("objects/block_3")
+        block_4 = Cube("objects/block_4")
 
         self.models.append(block_1)
-        # self.models.append(block_2)
-        # self.models.append(block_3)
-        # self.models.append(block_4)
-        # self.models.append(pyramid)
+        self.models.append(block_2)
+        self.models.append(block_3)
+        self.models.append(block_4)
         
 
     def move_x(self):
@@ -106,7 +103,7 @@ class Model:
 
         for model in self.models:
             model.create_edges_3d()
-            model.clip_edges(100, 1000)
+            model.clip_edges(1, 1000)
             model.get_clipped_vertices()
             model.project(math.radians(self.fov), 1, 0.1, 1000)
 
@@ -121,4 +118,3 @@ class Model:
 
         if self.paint:
             self.painter.paint_walls(window, (120, 60, 100))
-            # model.draw_edges(window, WHITE)

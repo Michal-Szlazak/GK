@@ -52,353 +52,18 @@ class Painter:
         self.intersection_points_grouped_by_y = {}
         self.intersection_lines_grouped_by_y = {}
 
-    def create_5_edge_front_wall(self, cube):
-
-        vertices = []
+    def remove_nan(self, vertices):
         final_vertices = []
-        
-        if(np.array_equal(cube.translated_vertices[1], cube.translated_vertices[2]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[2], cube.translated_vertices[3], cube.translated_vertices[5]))
-            
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[5])
-
-        elif (np.array_equal(cube.translated_vertices[3], cube.translated_vertices[4]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[3], cube.translated_vertices[4], cube.translated_vertices[5]))
-
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[5])
-            
-        elif (np.array_equal(cube.translated_vertices[5], cube.translated_vertices[6]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[3], cube.translated_vertices[5], cube.translated_vertices[6]))
-            
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[6])
-
-
-        elif (np.array_equal(cube.translated_vertices[7], cube.translated_vertices[0]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[3], cube.translated_vertices[5], cube.translated_vertices[7]))
-            
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[7])
-
-        else:
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[3], cube.translated_vertices[5]))
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[5])
 
         for vertex in vertices:
             if np.isnan(vertex[0]):
                 continue
             final_vertices.append(vertex)
 
-        self.walls.append(tuple(final_vertices))
+        return tuple(final_vertices)
 
-    def create_5_edge_back_wall(self, cube):
-
-        vertices = []
-        final_vertices = []
-        
-        if(np.array_equal(cube.translated_vertices[9], cube.translated_vertices[10]) == False):
-            # self.walls.append((cube.translated_vertices[8], cube.translated_vertices[9], cube.translated_vertices[10], cube.translated_vertices[11], cube.translated_vertices[13]))
-
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[10])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[13])
-
-        elif(np.array_equal(cube.translated_vertices[11], cube.translated_vertices[12]) == False):
-            # self.walls.append((cube.translated_vertices[8], cube.translated_vertices[9], cube.translated_vertices[11], cube.translated_vertices[12], cube.translated_vertices[13]))
-
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[12])
-            vertices.append(cube.translated_vertices[13])
-
-        elif(np.array_equal(cube.translated_vertices[13], cube.translated_vertices[14]) == False):
-            self.walls.append((cube.translated_vertices[8], cube.translated_vertices[9], cube.translated_vertices[11], cube.translated_vertices[13], cube.translated_vertices[14]))
-        
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[13])
-            vertices.append(cube.translated_vertices[14])
-
-        elif(np.array_equal(cube.translated_vertices[15], cube.translated_vertices[8]) == False):
-            # self.walls.append((cube.translated_vertices[15], cube.translated_vertices[8], cube.translated_vertices[9], cube.translated_vertices[11], cube.translated_vertices[13]))
-
-            vertices.append(cube.translated_vertices[15])
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[13])
-
-        else:
-            # self.walls.append((cube.translated_vertices[8], cube.translated_vertices[9], cube.translated_vertices[11], cube.translated_vertices[13]))
-
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[13])
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-
-    def create_5_edge_right_wall(self, cube):
-
-        vertices = []
-        final_vertices = []
-
-        if(np.array_equal(cube.translated_vertices[2], cube.translated_vertices[18]) == False):
-            # self.walls.append((cube.translated_vertices[3], cube.translated_vertices[2], cube.translated_vertices[19], cube.translated_vertices[9], cube.translated_vertices[11]))
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[18])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[11])
-
-            
-        elif (np.array_equal(cube.translated_vertices[19], cube.translated_vertices[10]) == False):
-            # self.walls.append((cube.translated_vertices[3], cube.translated_vertices[2], cube.translated_vertices[19], cube.translated_vertices[10], cube.translated_vertices[11]))
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[10])
-            vertices.append(cube.translated_vertices[11])
-            
-        elif (np.array_equal(cube.translated_vertices[11], cube.translated_vertices[21]) == False):
-            # self.walls.append((cube.translated_vertices[3], cube.translated_vertices[2], cube.translated_vertices[19], cube.translated_vertices[11] , cube.translated_vertices[21]))
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[11])
-            vertices.append(cube.translated_vertices[21])
-            
-        elif (np.array_equal(cube.translated_vertices[3], cube.translated_vertices[20]) == False):
-            # self.walls.append((cube.translated_vertices[20], cube.translated_vertices[3], cube.translated_vertices[2], cube.translated_vertices[19], cube.translated_vertices[11]))
-            vertices.append(cube.translated_vertices[20])
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[11])
-            
-        else:
-            # self.walls.append((cube.translated_vertices[3], cube.translated_vertices[2], cube.translated_vertices[19], cube.translated_vertices[11]))
-            vertices.append(cube.translated_vertices[3])
-            vertices.append(cube.translated_vertices[2])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[11])
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-    def create_5_edge_left_wall(self, cube):
-
-        vertices = []
-        final_vertices = []
-            
-        if(np.array_equal(cube.translated_vertices[7], cube.translated_vertices[16]) == False):
-            # self.walls.append((cube.translated_vertices[6], cube.translated_vertices[7], cube.translated_vertices[16], cube.translated_vertices[17], cube.translated_vertices[14]))  
-            vertices.append(cube.translated_vertices[6])
-            vertices.append(cube.translated_vertices[7])
-            vertices.append(cube.translated_vertices[16])
-            vertices.append(cube.translated_vertices[17])
-            vertices.append(cube.translated_vertices[14])
-        
-        elif(np.array_equal(cube.translated_vertices[17], cube.translated_vertices[15]) == False):
-            # self.walls.append((cube.translated_vertices[6], cube.translated_vertices[7], cube.translated_vertices[17], cube.translated_vertices[15], cube.translated_vertices[14]))  
-            vertices.append(cube.translated_vertices[6])
-            vertices.append(cube.translated_vertices[7])
-            vertices.append(cube.translated_vertices[17])
-            vertices.append(cube.translated_vertices[15])
-            vertices.append(cube.translated_vertices[14])
-        
-        elif(np.array_equal(cube.translated_vertices[14], cube.translated_vertices[23]) == False):
-            # self.walls.append((cube.translated_vertices[6], cube.translated_vertices[7], cube.translated_vertices[17], cube.translated_vertices[14], cube.translated_vertices[23]))  
-            vertices.append(cube.translated_vertices[6])
-            vertices.append(cube.translated_vertices[7])
-            vertices.append(cube.translated_vertices[17])
-            vertices.append(cube.translated_vertices[14])
-            vertices.append(cube.translated_vertices[23])
-
-        elif(np.array_equal(cube.translated_vertices[6], cube.translated_vertices[22]) == False):
-            # self.walls.append((cube.translated_vertices[22], cube.translated_vertices[6], cube.translated_vertices[7], cube.translated_vertices[17], cube.translated_vertices[14]))  
-            vertices.append(cube.translated_vertices[22])
-            vertices.append(cube.translated_vertices[6])
-            vertices.append(cube.translated_vertices[7])
-            vertices.append(cube.translated_vertices[17])
-            vertices.append(cube.translated_vertices[14])
-
-        else:
-            # self.walls.append((cube.translated_vertices[6], cube.translated_vertices[7], cube.translated_vertices[17], cube.translated_vertices[14]))  
-            vertices.append(cube.translated_vertices[6])
-            vertices.append(cube.translated_vertices[7])
-            vertices.append(cube.translated_vertices[17])
-            vertices.append(cube.translated_vertices[14])
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-    def create_5_edge_upper_wall(self, cube):
-
-        vertices = []
-        final_vertices = []
-
-        if(np.array_equal(cube.translated_vertices[1], cube.translated_vertices[18]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[18], cube.translated_vertices[19], cube.translated_vertices[8]))
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[18])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[8])
-
-        elif(np.array_equal(cube.translated_vertices[19], cube.translated_vertices[9]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[19], cube.translated_vertices[9], cube.translated_vertices[8]))
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[9])
-            vertices.append(cube.translated_vertices[8])
-
-        elif(np.array_equal(cube.translated_vertices[8], cube.translated_vertices[17]) == False):
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[19], cube.translated_vertices[8], cube.translated_vertices[17]))
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[8])
-            vertices.append(cube.translated_vertices[17])
-
-        elif(np.array_equal(cube.translated_vertices[0], cube.translated_vertices[16]) == False):
-            # self.walls.append((cube.translated_vertices[16], cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[19], cube.translated_vertices[8]))
-            vertices.append(cube.translated_vertices[16])
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[8])
-
-        else:
-            # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[19], cube.translated_vertices[8]))
-            vertices.append(cube.translated_vertices[0])
-            vertices.append(cube.translated_vertices[1])
-            vertices.append(cube.translated_vertices[19])
-            vertices.append(cube.translated_vertices[8])
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-    def create_5_edge_lower_wall(self, cube):
-
-        vertices = []
-        final_vertices = []
-
-        if(np.array_equal(cube.translated_vertices[4], cube.translated_vertices[20]) == False):
-            # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[4], cube.translated_vertices[20], cube.translated_vertices[21], cube.translated_vertices[13]))
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[20])
-            vertices.append(cube.translated_vertices[21])
-            vertices.append(cube.translated_vertices[13])
-
-        elif(np.array_equal(cube.translated_vertices[21], cube.translated_vertices[12]) == False):
-            # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[4], cube.translated_vertices[21], cube.translated_vertices[12], cube.translated_vertices[13]))
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[21])
-            vertices.append(cube.translated_vertices[12])
-            vertices.append(cube.translated_vertices[13])
-
-        elif(np.array_equal(cube.translated_vertices[13], cube.translated_vertices[23]) == False):
-            # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[4], cube.translated_vertices[21], cube.translated_vertices[13], cube.translated_vertices[23]))
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[21])
-            vertices.append(cube.translated_vertices[13])
-            vertices.append(cube.translated_vertices[23])
-
-        elif(np.array_equal(cube.translated_vertices[5], cube.translated_vertices[22]) == False):
-            # self.walls.append((cube.translated_vertices[22], cube.translated_vertices[5], cube.translated_vertices[4], cube.translated_vertices[21], cube.translated_vertices[13]))
-            vertices.append(cube.translated_vertices[22])
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[21])
-            vertices.append(cube.translated_vertices[13])
-
-        else:
-            # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[4], cube.translated_vertices[21], cube.translated_vertices[13]))
-            vertices.append(cube.translated_vertices[5])
-            vertices.append(cube.translated_vertices[4])
-            vertices.append(cube.translated_vertices[21])
-            vertices.append(cube.translated_vertices[13])
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-    def create_and_add_walls(self, cube):
-
-        # Front wall
-        # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[3], cube.translated_vertices[5]))
-        
-        # Back wall
-        # self.walls.append((cube.translated_vertices[8], cube.translated_vertices[11], cube.translated_vertices[13]))
-
-        # Upper wall
-        # self.walls.append((cube.translated_vertices[0], cube.translated_vertices[1], cube.translated_vertices[9], cube.translated_vertices[8]))
-
-        # # Lower wall
-        # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[3], cube.translated_vertices[11], cube.translated_vertices[13]))
-
-        # Left wall
-        # self.walls.append((cube.translated_vertices[5], cube.translated_vertices[0], cube.translated_vertices[8], cube.translated_vertices[13]))
-
-        # Right wall
-        # self.walls.append((cube.translated_vertices[3], cube.translated_vertices[1], cube.translated_vertices[9], cube.translated_vertices[11]))
-        
-
-        # self.create_5_edge_front_wall(cube)
-        # self.create_5_edge_right_wall(cube)
-        # self.create_5_edge_left_wall(cube)
-        # self.create_5_edge_upper_wall(cube)
-        # self.create_5_edge_lower_wall(cube)
-        # self.create_5_edge_back_wall(cube)
-        
-        # Front wall
+    # Definicje ścian
+    def create_front_wall(self, cube):
         vertices = [
             cube.translated_vertices[0],
             cube.translated_vertices[1],
@@ -410,15 +75,9 @@ class Painter:
             cube.translated_vertices[7],
             ]
         
-        final_vertices = []
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
+        return self.remove_nan(vertices)
+    
+    def create_right_wall(self, cube):
         # Right wall
         vertices = [
             cube.translated_vertices[3],
@@ -431,15 +90,9 @@ class Painter:
             cube.translated_vertices[20]
             ]
         
-        final_vertices = []
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
+        return self.remove_nan(vertices)
+    
+    def create_back_wall(self, cube):
         # Back wall
         vertices = [
             cube.translated_vertices[8],
@@ -452,16 +105,10 @@ class Painter:
             cube.translated_vertices[15]
             ]
         
-        final_vertices = []
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
-         # Left wall
+        return self.remove_nan(vertices)
+    
+    def create_left_wall(self, cube):
+        # Left wall
         vertices = [
             cube.translated_vertices[16],
             cube.translated_vertices[17],
@@ -473,15 +120,9 @@ class Painter:
             cube.translated_vertices[7]
             ]
         
-        final_vertices = []
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
+        return self.remove_nan(vertices)
+    
+    def create_upper_wall(self, cube):
         # Upper wall
         vertices = [
             cube.translated_vertices[5],
@@ -494,15 +135,9 @@ class Painter:
             cube.translated_vertices[22]
             ]
         
-        final_vertices = []
-
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
-
-        self.walls.append(tuple(final_vertices))
-
+        return self.remove_nan(vertices)
+    
+    def create_lower_wall(self, cube):
         # Lower wall
         vertices = [
             cube.translated_vertices[0],
@@ -515,20 +150,20 @@ class Painter:
             cube.translated_vertices[16]
             ]
         
-        final_vertices = []
+        return self.remove_nan(vertices)
+        
+    # Utworzenie każdej ze ścian
+    def create_and_add_walls(self, cube):
+        
+        self.walls.append(self.create_front_wall(cube))
+        self.walls.append(self.create_right_wall(cube))
+        self.walls.append(self.create_back_wall(cube))
+        self.walls.append(self.create_left_wall(cube))
+        self.walls.append(self.create_upper_wall(cube))
+        self.walls.append(self.create_lower_wall(cube))
 
-        for vertex in vertices:
-            if np.isnan(vertex[0]):
-                continue
-            final_vertices.append(vertex)
 
-        self.walls.append(tuple(final_vertices))
-
-
-    def print_intersection_points(self):
-        for point in self.intersection_lines:
-            print(point)
-
+    # Zebranie punktów przecięcia, ewentualne grupowanie ich (przecięcia wierzchołków)
     def paint_walls(self, screen, color):
         
         for i in range(600):
@@ -556,9 +191,10 @@ class Painter:
 
                 wall_id += 1
             
-                if len(wall_points) == 2:
+                if len(wall_points) == 2:                                           
                     self.intersection_lines.append((wall_points[0], wall_points[1]))
-                elif len(wall_points) == 3:
+
+                elif len(wall_points) == 3:                                                     
 
                     corner_point = None
 
@@ -595,8 +231,69 @@ class Painter:
 
                     self.intersection_lines.append((wall_points[0], wall_points[1]))
 
-                else:
-                    print("Error: Wall has", len(wall_points), "points")
+                elif len(wall_points) == 4:                                                 # Jeżeli przecięcia są cztery to trzeba usunąć dwa punkty przecięcia będące wierzchołkami
+                    corner_point = None
+                    count_corner_points = 0
+
+                    if(wall_points[0][:1] == wall_points[1][:1]):
+                        corner_point = wall_points[0]
+                        count_corner_points += 1
+                        
+                    if(wall_points[0][:1] == wall_points[2][:1]):
+                        corner_point = wall_points[0]
+                        count_corner_points += 1
+                        
+                    if(wall_points[0][:1] == wall_points[3][:1]):
+                        corner_point = wall_points[0]
+                        count_corner_points += 1
+                        
+                    if(wall_points[1][:1] == wall_points[2][:1]):
+                        corner_point = wall_points[1]
+                        count_corner_points += 1
+                        
+                    if(wall_points[1][:1] == wall_points[3][:1]):
+                        corner_point = wall_points[1]
+                        count_corner_points += 1
+                        
+                    if(wall_points[2][:1] == wall_points[3][:1]):
+                        corner_point = wall_points[2]
+                        count_corner_points += 1
+                        
+
+                    if corner_point == None:
+                        print("Error: No corner point")
+                        continue
+
+                    if count_corner_points == 2:
+                        continue
+                    else: 
+                        wall_points.remove(corner_point)
+                    
+                    corner_lines = []
+
+                    for k in range(len(wall)):
+
+                        xx1, yy1, _, zz1 = wall[k]
+                        xx2, yy2, _, zz2 = wall[(k + 1) % len(wall)]
+
+                        if corner_point[:2] == (int(xx1), yy1) and (int(xx1), yy1) != (int(xx2), yy2):
+                            corner_lines.append(
+                                (int(xx2), yy2, zz2, wall_id)
+                                )
+                        if corner_point[:2] == (int(xx2), yy2) and (int(xx1), yy1) != (int(xx2), yy2):
+                            corner_lines.append(
+                                (int(xx1), yy1, zz1, wall_id)
+                                )
+                    
+                    corner_point_y = corner_point[1]
+                    corner_line_y_1 = corner_lines[0][1]
+                    corner_line_y_2 = corner_lines[1][1]
+
+                    if  corner_line_y_1 <= corner_point_y <= corner_line_y_2 or corner_line_y_2 <= corner_point_y <= corner_line_y_1:
+                        wall_points.remove(corner_point)
+                        self.intersection_points.remove(corner_point)
+
+                    self.intersection_lines.append((wall_points[0], wall_points[1]))
                         
         self.group_lines_by_y()
         self.group_intersection_points_by_y()
@@ -702,7 +399,14 @@ class Painter:
                 print(line)
 
     def get_max_z(self, line):
-        return line[0][2] + line[1][2]
+
+        x_1, y_1, z_1, _ = line[0]
+        x_2, y_2, z_2, _ = line[1]
+        
+        distance_1 = math.sqrt(x_1 ** 2 + y_1 ** 2 + z_1 ** 2)
+        distance_2 = math.sqrt(x_2 ** 2 + y_2 ** 2 + z_2 ** 2)
+
+        return distance_1 + distance_2
 
     def add_walls(self, cubes):
         for cube in cubes:

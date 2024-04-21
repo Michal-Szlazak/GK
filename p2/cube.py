@@ -53,7 +53,7 @@ class Cube:
             clipped_edge = self.clip_line(edge, near)
             if clipped_edge[0][0] != float('inf') and clipped_edge[1][0] != float('inf'):
                 self.clipped_edges.append(clipped_edge)
-        print("Number of clipped edges: ", len(self.clipped_edges))
+        # print("Number of clipped edges: ", len(self.clipped_edges))
 
     # Pobranie przyciętych wierzchołków
     def get_clipped_vertices(self):
@@ -78,7 +78,7 @@ class Cube:
         p2 = edge[1]
 
         if p1[2] < near and p2[2] < near:
-            print("Both points are behind the near plane")
+            # print("Both points are behind the near plane")
             return (
                 [np.nan, np.nan, np.nan, np.nan],
                 [np.nan, np.nan, np.nan, np.nan]

@@ -17,9 +17,6 @@ def main():
     pygame.init()
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pygame Window")
-    font = pygame.font.Font(None, 14)
-
-    clock = pygame.time.Clock()
 
     running = True
     while running:
