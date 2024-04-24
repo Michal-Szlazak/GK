@@ -82,10 +82,16 @@ class Model:
             model.rotate(0, 0, -math.radians(self.rotate_z_val))
 
     def zoom_in(self):
-        self.fov -= 1
+        if self.fov > 5:
+            self.fov -= 5
+        else:
+            print("Max zoom in reached")
     
     def zoom_out(self):
-        self.fov += 1
+        if self.fov < 175:
+            self.fov += 5
+        else:
+            print("Max zoom out reached")
 
     def change_paint_mode(self):
         self.paint = not self.paint
