@@ -10,12 +10,12 @@ class Model:
     fov = 90
 
     aspect_ratio = 2
-    rotate_x_val = 5
-    rotate_y_val = 5
-    rotate_z_val = 5
-    move_x_val = 8
-    move_y_val = 5
-    move_z_val = 5
+    rotate_x_val = 8
+    rotate_y_val = 8
+    rotate_z_val = 8
+    move_x_val = 10
+    move_y_val = 8
+    move_z_val = 8
     paint = True
 
     painter = Painter()
@@ -94,7 +94,8 @@ class Model:
         self.painter.print_lines()
 
     def print_intersection_points(self):
-        self.painter.print_intersection_points()
+        print("\nIntersection points:")
+        self.painter.print_lines()
             
 
     def print(self, window):

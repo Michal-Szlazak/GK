@@ -3,9 +3,6 @@ import math
 import pygame
 import numpy as np
 
-WHITE = (255, 255, 255)
-GREY = (128, 128, 128)
-
 colors_rgb = [
     (255, 102, 102),   # Light Red
     (255, 178, 102),   # Light Orange
@@ -65,14 +62,14 @@ class Painter:
     # Definicje ścian
     def create_front_wall(self, cube):
         vertices = [
-            cube.translated_vertices[0],
-            cube.translated_vertices[1],
-            cube.translated_vertices[2],
-            cube.translated_vertices[3],
-            cube.translated_vertices[4],
-            cube.translated_vertices[5],
-            cube.translated_vertices[6],
             cube.translated_vertices[7],
+            cube.translated_vertices[6],
+            cube.translated_vertices[5],
+            cube.translated_vertices[4],
+            cube.translated_vertices[3],
+            cube.translated_vertices[2],
+            cube.translated_vertices[1],
+            cube.translated_vertices[0],
             ]
         
         return self.remove_nan(vertices)
@@ -80,14 +77,14 @@ class Painter:
     def create_right_wall(self, cube):
         # Right wall
         vertices = [
-            cube.translated_vertices[3],
-            cube.translated_vertices[2],
-            cube.translated_vertices[18],
-            cube.translated_vertices[19],
-            cube.translated_vertices[10],
-            cube.translated_vertices[11],
+            cube.translated_vertices[20],
             cube.translated_vertices[21],
-            cube.translated_vertices[20]
+            cube.translated_vertices[11],
+            cube.translated_vertices[10],
+            cube.translated_vertices[19],
+            cube.translated_vertices[18],
+            cube.translated_vertices[2],
+            cube.translated_vertices[3]
             ]
         
         return self.remove_nan(vertices)
@@ -125,14 +122,14 @@ class Painter:
     def create_upper_wall(self, cube):
         # Upper wall
         vertices = [
-            cube.translated_vertices[5],
-            cube.translated_vertices[4],
-            cube.translated_vertices[20],
-            cube.translated_vertices[21],
-            cube.translated_vertices[12],
-            cube.translated_vertices[13],
+            cube.translated_vertices[22],
             cube.translated_vertices[23],
-            cube.translated_vertices[22]
+            cube.translated_vertices[13],
+            cube.translated_vertices[12],
+            cube.translated_vertices[21],
+            cube.translated_vertices[20],
+            cube.translated_vertices[4],
+            cube.translated_vertices[5]
             ]
         
         return self.remove_nan(vertices)
@@ -155,13 +152,53 @@ class Painter:
     # Utworzenie każdej ze ścian
     def create_and_add_walls(self, cube):
         
-        self.walls.append(self.create_front_wall(cube))
-        self.walls.append(self.create_right_wall(cube))
-        self.walls.append(self.create_back_wall(cube))
-        self.walls.append(self.create_left_wall(cube))
-        self.walls.append(self.create_upper_wall(cube))
-        self.walls.append(self.create_lower_wall(cube))
+        wall = self.create_left_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
 
+        wall = self.create_right_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
+
+        wall = self.create_front_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
+
+        wall = self.create_back_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
+
+        wall = self.create_upper_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
+
+        wall = self.create_lower_wall(cube)
+        if(self.is_wall_orientation_cw(wall)):
+            self.walls.append(wall)
+
+    def orientation(self, p1, p2, p3):
+        return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0])
+
+    def is_wall_orientation_cw(self, wall):
+
+        orientation = 0.0
+        copied_wall = list(wall)
+
+        for i in range(len(copied_wall) - 1):
+            if(copied_wall[i][1] == copied_wall[i + 1][1] and copied_wall[i][0] == copied_wall[i + 1][0] and copied_wall[i][2] == copied_wall[i + 1][2]):
+                copied_wall.pop(i)
+                break
+                
+
+        for i in range(len(copied_wall) - 2): 
+            p1 = copied_wall[i]
+            p2 = copied_wall[i + 1]
+            p3 = copied_wall[i + 2]
+            
+            orientation += self.orientation(p1, p2, p3)
+
+        return orientation > 0
+        
 
     # Zebranie punktów przecięcia, ewentualne grupowanie ich (przecięcia wierzchołków)
     def paint_walls(self, screen, color):
@@ -180,14 +217,14 @@ class Painter:
 
                     if y1 <= i <= y2 or y2 <= i <= y1:
                         if y1 == y2:
-                            wall_points.append((int(x1), y1, z1, wall_id))
-                            self.intersection_points.append((int(x1), y1, z1, wall_id))
+                            wall_points.append((x1, y1, z1, wall_id))
+                            self.intersection_points.append((x1, y1, z1, wall_id))
                         else:
                             x = x1 + (x2 - x1) * (i - y1) / (y2 - y1)
                             z = z1 + (z2 - z1) * (i - y1) / (y2 - y1)
 
-                            wall_points.append((int(x), i, int(z), wall_id))
-                            self.intersection_points.append((int(x), i, int(z), wall_id))
+                            wall_points.append((x, i, z, wall_id))
+                            self.intersection_points.append((x, i, z, wall_id))
 
                 wall_id += 1
             
@@ -231,69 +268,16 @@ class Painter:
 
                     self.intersection_lines.append((wall_points[0], wall_points[1]))
 
-                elif len(wall_points) == 4:                                                 # Jeżeli przecięcia są cztery to trzeba usunąć dwa punkty przecięcia będące wierzchołkami
+                elif len(wall_points) > 3:                                                 # Jeżeli przecięcia są cztery to trzeba usunąć dwa punkty przecięcia będące wierzchołkami
                     corner_point = None
-                    count_corner_points = 0
-
-                    if(wall_points[0][:1] == wall_points[1][:1]):
-                        corner_point = wall_points[0]
-                        count_corner_points += 1
-                        
-                    if(wall_points[0][:1] == wall_points[2][:1]):
-                        corner_point = wall_points[0]
-                        count_corner_points += 1
-                        
-                    if(wall_points[0][:1] == wall_points[3][:1]):
-                        corner_point = wall_points[0]
-                        count_corner_points += 1
-                        
-                    if(wall_points[1][:1] == wall_points[2][:1]):
-                        corner_point = wall_points[1]
-                        count_corner_points += 1
-                        
-                    if(wall_points[1][:1] == wall_points[3][:1]):
-                        corner_point = wall_points[1]
-                        count_corner_points += 1
-                        
-                    if(wall_points[2][:1] == wall_points[3][:1]):
-                        corner_point = wall_points[2]
-                        count_corner_points += 1
-                        
-
-                    if corner_point == None:
-                        print("Error: No corner point")
-                        continue
-
-                    if count_corner_points == 2:
-                        continue
-                    else: 
-                        wall_points.remove(corner_point)
                     
-                    corner_lines = []
+                    distict_points = []
 
-                    for k in range(len(wall)):
+                    for point in wall_points:
+                        if point not in distict_points:
+                            distict_points.append(point)
 
-                        xx1, yy1, _, zz1 = wall[k]
-                        xx2, yy2, _, zz2 = wall[(k + 1) % len(wall)]
-
-                        if corner_point[:2] == (int(xx1), yy1) and (int(xx1), yy1) != (int(xx2), yy2):
-                            corner_lines.append(
-                                (int(xx2), yy2, zz2, wall_id)
-                                )
-                        if corner_point[:2] == (int(xx2), yy2) and (int(xx1), yy1) != (int(xx2), yy2):
-                            corner_lines.append(
-                                (int(xx1), yy1, zz1, wall_id)
-                                )
-                    
-                    corner_point_y = corner_point[1]
-                    corner_line_y_1 = corner_lines[0][1]
-                    corner_line_y_2 = corner_lines[1][1]
-
-                    if  corner_line_y_1 <= corner_point_y <= corner_line_y_2 or corner_line_y_2 <= corner_point_y <= corner_line_y_1:
-                        wall_points.remove(corner_point)
-                        self.intersection_points.remove(corner_point)
-
-                    self.intersection_lines.append((wall_points[0], wall_points[1]))
+                    self.intersection_lines.append((distict_points[0], distict_points[1]))       
                         
         self.group_lines_by_y()
         self.group_intersection_points_by_y()
@@ -389,6 +373,9 @@ class Painter:
                 pygame.draw.line(screen, colors_rgb[wall_id % 24], line[0][:2], line[1][:2])
 
     def print_lines(self):
+
+        index = 0
+
         for y_line in self.cut_intersection_lines:
             lines = self.cut_intersection_lines[y_line]
             lines.sort(key=lambda line: self.get_max_z(line), reverse=True)
@@ -398,15 +385,17 @@ class Painter:
             for line in lines:
                 print(line)
 
+            if index == 100:
+                break
+
+            index += 1
+
     def get_max_z(self, line):
 
         x_1, y_1, z_1, _ = line[0]
         x_2, y_2, z_2, _ = line[1]
-        
-        distance_1 = math.sqrt(x_1 ** 2 + y_1 ** 2 + z_1 ** 2)
-        distance_2 = math.sqrt(x_2 ** 2 + y_2 ** 2 + z_2 ** 2)
 
-        return distance_1 + distance_2
+        return z_1 + z_2
 
     def add_walls(self, cubes):
         for cube in cubes:
