@@ -13,9 +13,7 @@ class RayTracer:
                 ray = self.create_ray(x, y)
                 color = self.ray_trace(ray, sphere_list)
                 if color[0] != 0 or color[1] != 0 or color[2] != 0:
-                    # Adjust window offset based on window size
-                    # if color[0] > 50 or color[1] > 50 or color[2] > 50:
-                    #     print("Color printed for x, y: ", color, x, y)
+
                     window.set_at((x, y), color)
 
     def ray_trace(self, ray, sphere_list):
@@ -25,63 +23,65 @@ class RayTracer:
         if closest_sphere is None:
             return color
         
+        # print("Closest sphere: ", closest_sphere)
+        # print("Closest t: ", closest_t)
+        
         color = closest_sphere.material.color
     
         hit_position = ray.point_at_parameter(closest_t)
         hit_normal = closest_sphere.normal(hit_position)
 
+        # if hit_normal.any() < -1 or hit_normal.any() > 1:
+        #     print("Hit normal: ", hit_normal)
+
         result = self.color_at(hit_position, closest_sphere, sphere_list, hit_normal)
         denormalized_color = self.denormalize_color(result)
         result_int = np.array(denormalized_color, dtype=np.uint8)
         color += result_int
-        # color = np.clip(color, 0, 255).astype(np.uint8)
-        # print("Color: ", color)
+        color = np.clip(color, 0, 255).astype(np.uint8)
         return tuple(color)
 
     def find_closest_intersection(self, ray, sphere_list):
         closest_sphere = None
-        closest_t = None
+        closest_t = float('inf')  # Initialize closest_t to infinity
         
         for sphere in sphere_list:
             hit_position = sphere.hit_position(ray)
             
             if hit_position is not None:
-                distance = np.linalg.norm(hit_position - ray.origin)
-                
-                if closest_t is None or distance < closest_t:
-                    closest_t = distance
+                t = np.linalg.norm(hit_position - ray.origin)  # Distance along the ray
+                if t < closest_t:
+                    closest_t = t
                     closest_sphere = sphere
-    
+        
         return closest_sphere, closest_t
     
-    def color_at(self, hit_position, sphere, sphere_listm, hit_normal):
-
+    def color_at(self, hit_position, sphere, sphere_list, hit_normal):
         material = sphere.material
-        obj_color = sphere.material.color
-        to_camera = -hit_position - 1
+        obj_color = material.color
         black_color = np.zeros(3)
-        # color = material.ambient * black_color
         color = material.ambient * np.array(obj_color)
-
-        specular_k = 50
+        specular_k = 100  # You can use a fixed value or get it from material properties
 
         for light in self.scene.lights:
-            
             to_light = Ray(hit_position, light.position - hit_position)
+            diffuse_intensity = max(0, hit_normal.dot(to_light.direction))
 
-            # Diffuse shading
-            color += np.array(obj_color) * material.diffuse * max(0, hit_normal.dot(to_light.direction))
+            # print(hit_position, hit_normal)
+            # # # Diffuse shading
+            if diffuse_intensity > 0:
+                print("Diffuse intensity: ", diffuse_intensity)
+
+            color += np.array(obj_color) * material.diffuse * diffuse_intensity
 
             # Specular shading
-            half_vector = (to_light.direction + to_camera) / np.linalg.norm(to_light.direction + to_camera) 
-            # if max(0, hit_normal.dot(to_light.direction)) > 0:
-            #     print("Max: ", max(0, hit_normal.dot(to_light.direction)))
-            color += np.array(light.color) * material.specular * max(0, hit_normal.dot(half_vector)) ** specular_k
+            # view_dir = -to_light.direction  # Direction towards the camera
+            # reflect_dir = 2 * np.dot(hit_normal, to_light.direction) * hit_normal - to_light.direction
+            # specular_intensity = max(0, view_dir.dot(reflect_dir)) ** specular_k
+            # color += np.array(light.color) * material.specular * specular_intensity
 
-            # addition = np.array(light.color) * material.specular * max(0, hit_normal.dot(half_vector)) ** specular_k
-            # if addition[0] > 0 or addition[1] > 0 or addition[2] > 0:
-            #     print("Light addition: ", np.array(light.color) * material.specular * max(0, hit_normal.dot(half_vector)) ** specular_k)
-
+        color = np.clip(color, 0, 1)
+        # print("Color: ", color)
         return np.array(color)
 
 
@@ -91,7 +91,7 @@ class RayTracer:
         aspect_ratio = self.width / self.height
         normalized_x = (2 * (x + 0.5) / self.width - 1) * aspect_ratio
         normalized_y = 1 - 2 * (y + 0.5) / self.height
-        return Ray((0, 0, 0), (normalized_x, normalized_y, 1))
+        return Ray((0, 0, -1), (normalized_x, normalized_y, 1))
     
     def denormalize_color(self, color):
         return (color[0] * 255, color[1] * 255, color[2] * 255)

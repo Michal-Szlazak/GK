@@ -46,8 +46,8 @@ class Model:
 
     def __init__(self):
     
-        material_1 = Material((255, 0, 0), 0.5, 1, 1)
-        sphere1 = Sphere((0, 0, 1), 0.5, material=material_1)
+        material_1 = Material((255, 0, 0), 0.5, 10, 10)
+        sphere1 = Sphere((0, 0, 50), 20, material=material_1)
 
         self.spheres.append(sphere1)
         self.lights.append(self.light)
