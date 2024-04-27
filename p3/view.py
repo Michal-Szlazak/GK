@@ -9,6 +9,8 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 LIGHT_BLUE = (103, 216, 200)
 LIGHT_GREEN = (144, 238, 144)
+LIGHT_GREY = (211, 211, 211)
+DARK_GREY = (169, 169, 169)
 
 def main():
 
@@ -25,8 +27,9 @@ def main():
 
         if event.type == pygame.KEYDOWN:
                 
-            window.fill(BLACK)
+            window.fill(DARK_GREY)
             model.print(window)
+            print("### Window printed ###")
             pygame.display.flip()
 
         pygame.display.flip()

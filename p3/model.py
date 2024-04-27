@@ -39,15 +39,15 @@ class Model:
 
     ray_tracer = RayTracer()
     image = Image(600, 600)
-    light = Light((300, 300, 100), colors_rgb[12])
+    light = Light((1.5, -0.5, -10), (1, 1, 1))
 
     spheres = []
     lights = []
 
     def __init__(self):
     
-        material_1 = Material(colors_rgb[0], 0.05, 1.0, 1.0)
-        sphere1 = Sphere((0, 0, 100), 50, material=material_1)
+        material_1 = Material((255, 0, 0), 0.5, 1, 1)
+        sphere1 = Sphere((0, 0, 1), 0.5, material=material_1)
 
         self.spheres.append(sphere1)
         self.lights.append(self.light)
@@ -58,4 +58,4 @@ class Model:
         
         self.ray_tracer.render(window, self.spheres, self.image, self.scene)
 
-        self.image.print(window)
+        # self.image.print(window)

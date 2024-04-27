@@ -14,7 +14,8 @@ class Sphere:
         origin = np.array(ray.origin)
         direction = np.array(ray.direction)
         oc = origin - self.center
-        a = direction.dot(ray.direction)
+        # a = direction.dot(ray.direction)
+        a = 1.0
         b = 2.0 * oc.dot(ray.direction)
         c = oc.dot(oc) - self.radius * self.radius
         discriminant = b * b - 4 * a * c
