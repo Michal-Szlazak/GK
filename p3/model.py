@@ -1,8 +1,5 @@
-import math
-import pygame
 from sphere import Sphere
 from ray_tracer import RayTracer
-from image import Image
 from light import Light
 from material import Material
 from scene import Scene
@@ -10,44 +7,33 @@ from color import Color
 from vector import Vector
 from point import Point
 
-colors_rgb = [
-    (255, 102, 102),   # Light Red
-    (255, 178, 102),   # Light Orange
-    (255, 255, 102),   # Light Yellow
-    (178, 255, 102),   # Light Lime
-    (102, 255, 102),   # Light Green
-    (102, 255, 178),   # Light Aqua
-    (102, 255, 255),   # Light Cyan
-    (102, 178, 255),   # Light Sky Blue
-    (102, 102, 255),   # Light Blue
-    (178, 102, 255),   # Light Purple
-    (255, 102, 255),   # Light Magenta
-    (255, 102, 178),   # Light Pink
-    (255, 153, 204),   # Light Salmon
-    (255, 204, 204),   # Light Peach
-    (255, 204, 153),   # Light Apricot
-    (255, 204, 102),   # Light Gold
-    (255, 255, 102),   # Light Lemon
-    (204, 255, 102),   # Light Lime Green
-    (153, 255, 102),   # Light Chartreuse
-    (102, 255, 102),   # Light Lime
-    (102, 255, 153),   # Light Seafoam Green
-    (102, 255, 255),   # Light Electric Blue
-    (102, 153, 255),   # Light Periwinkle
-    (178, 102, 255),   # Light Lavender
-    (255, 255, 255)    # Light White
-]
-
 class Model:
 
-    WIDTH = 600
+    WIDTH = 800
     HEIGHT = 600
     camera = Vector(0, 0, -1)
+    # ambient=0.2, diffuse=1.0, specular=1.0, n=50.0, f_att=0.1
+    METALLIC = Material(Color.from_ints(255, 255, 255), 0.1, 0.2, 0.8, 300.0, 0.1)
+    WALL = Material(Color.from_ints(255, 255, 255), 0.1, 0.8, 0.2, 5.0, 0.1)
+    PLASTIC = Material(Color.from_ints(255, 255, 255), 0.1, 0.4, 0.6, 50.0, 0.1)
+    WOOD = Material(Color.from_ints(184, 115, 51), 0.1, 0.6, 0.4, 25.0, 0.1)
+    
+    
+    COPPER = Material(Color.from_ints(184, 135, 101), 0.1, 0.5, 0.5, 100.0, 0.5)
+
     objects = [
-        Sphere(Point(0, 0, 0), 0.5, Material(Color.from_ints(150, 1, 1)))
+        # Sphere(Point(0, 0, 0), 0.5, COPPER),
+        # Sphere(Point(0, 0, 0), 0.5, WALL),
+        # Sphere(Point(0, 0, 1), 0.5, METALLIC),
+        # Sphere(Point(0, 0, 1), 0.5, PLASTIC),
+        Sphere(Point(-0.6, -0.6, 1.5), 0.5, METALLIC),
+        Sphere(Point(0.6, -0.6, 1.5), 0.5, WALL),
+        Sphere(Point(-0.6, 0.6, 1.5), 0.5, PLASTIC),
+        Sphere(Point(0.6, 0.6, 1.5), 0.5, WOOD)
         ]
     lights = [
-        Light(Point(1.5, -0.5, -10.0), Color.from_ints(255, 255, 255))
+        Light(Point(-1, -1, -1), Color.from_ints(255, 255, 255)),
+        # Light(Point(1, -1, -1), Color.from_ints(255, 255, 255))
         ]
     scene = Scene(camera, objects, lights, WIDTH, HEIGHT)
 

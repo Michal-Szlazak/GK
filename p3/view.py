@@ -3,7 +3,7 @@ import sys
 from model import Model
 
 
-WIDTH, HEIGHT = 600, 600
+WIDTH, HEIGHT = 800, 600
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -28,6 +28,7 @@ def main():
         if event.type == pygame.KEYDOWN:
                 
             window.fill(DARK_GREY)
+            print("### Computing ###")
             model.print(window)
             print("### Window printed ###")
             pygame.display.flip()
