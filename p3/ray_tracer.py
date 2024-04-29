@@ -1,107 +1,147 @@
 from ray import Ray
 import numpy as np
-from image import Image
+from point import Point
+from color import Color
+from vector import Vector
 
+DARK_GRAY = Color(0.2, 0.2, 0.2)
 
 class RayTracer:
-    def render(self, window, sphere_list, image, scene):
-        self.width, self.height = window.get_size()
-        self.scene = scene
+    def render(self, scene, window):
+        width = scene.width
+        height = scene.height
+        aspect_ratio = float(width) / height
+        x0 = -1.0
+        x1 = +1.0
+        xstep = (x1 - x0) / (width - 1)
+        y0 = -1.0 / aspect_ratio
+        y1 = +1.0 / aspect_ratio
+        ystep = (y1 - y0) / (height - 1)
+        camera = scene.camera
 
-        for x in range(self.width):
-            for y in range(self.height):
-                ray = self.create_ray(x, y)
-                color = self.ray_trace(ray, sphere_list)
-                if color[0] != 0 or color[1] != 0 or color[2] != 0:
+        for j in range(height):
+            y = y0 + j * ystep
+            for i in range(width):
+                x = x0 + i * xstep
 
-                    window.set_at((x, y), color)
+                ray = Ray(camera, Point(x, y) - camera)
+                color = self.ray_trace(ray, scene)
+                color = self.vec_to_color(color)
+                # print(color)
+                window.set_at((i, j), color)
 
-    def ray_trace(self, ray, sphere_list):
-        color = np.array([0, 0, 0], dtype=np.uint8)
+    def vec_to_color(self, vec):
+        r = int(255.0 * np.clip(vec.x, 0.0, 1.0))
+        g = int(255.0 * np.clip(vec.y, 0.0, 1.0))
+        b = int(255.0 * np.clip(vec.z, 0.0, 1.0))
+        return (r, g, b)
 
-        closest_sphere, closest_t = self.find_closest_intersection(ray, sphere_list)
-        if closest_sphere is None:
+    def ray_trace(self, ray, scene):
+        color = DARK_GRAY
+        # Find the nearest object hit by the ray in the scene
+        dist_hit, obj_hit = self.find_nearest(ray, scene)
+        if obj_hit is None:
             return color
-        
-        # print("Closest sphere: ", closest_sphere)
-        # print("Closest t: ", closest_t)
-        
-        color = closest_sphere.material.color
+        hit_pos = ray.origin + ray.direction * dist_hit
+        hit_normal = obj_hit.normal(hit_pos)
+        # color += self.color_at(obj_hit, hit_pos, hit_normal, scene)
+        # color = self.color_at_phong(obj_hit, hit_pos, hit_normal, scene)
+        color = self.render_phong(obj_hit, hit_pos, hit_normal, scene)
+        return color
+
+    def find_nearest(self, ray, scene):
+        dist_min = None
+        obj_hit = None
+        for obj in scene.objects:
+            dist = obj.intersects(ray)
+            if dist is not None and (obj_hit is None or dist < dist_min):
+                dist_min = dist
+                obj_hit = obj
+        return (dist_min, obj_hit)
     
-        hit_position = ray.point_at_parameter(closest_t)
-        hit_normal = closest_sphere.normal(hit_position)
+    def color_at(self, obj_hit, hit_pos, normal, scene):
+        material = obj_hit.material
+        obj_color = material.color_at()
+        to_cam = scene.camera - hit_pos
+        specular_k = 50
+        color = material.ambient * Color.from_ints(0, 0, 0)
+        # Light calculations
+        for light in scene.lights:
+            to_light = Ray(hit_pos, light.position - hit_pos)
+            # Diffuse shading (Lambert)
+            color += (
+                obj_color
+                * material.diffuse
+                * max(normal.dot_product(to_light.direction), 0)
+            )
+            # Specular shading (Blinn-Phong)
+            half_vector = (to_light.direction + to_cam).normalize()
+            color += (
+                light.color
+                * material.specular
+                * max(normal.dot_product(half_vector), 0) ** specular_k
+            )
+        return color
+    
+    def color_at_phong(self, obj_hit, hit_pos, normal, scene):
 
-        # if hit_normal.any() < -1 or hit_normal.any() > 1:
-        #     print("Hit normal: ", hit_normal)
+        color = Color(0, 0, 0)
 
-        result = self.color_at(hit_position, closest_sphere, sphere_list, hit_normal)
-        denormalized_color = self.denormalize_color(result)
-        result_int = np.array(denormalized_color, dtype=np.uint8)
-        color += result_int
-        color = np.clip(color, 0, 255).astype(np.uint8)
-        return tuple(color)
-
-    def find_closest_intersection(self, ray, sphere_list):
-        closest_sphere = None
-        closest_t = float('inf')  # Initialize closest_t to infinity
+        half_vector = (scene.camera - hit_pos).normalize()
+        cos_alpha = max(0, normal.dot_product(half_vector))
+        specular_intensity = obj_hit.material.specular * cos_alpha ** obj_hit.material.n
         
-        for sphere in sphere_list:
-            hit_position = sphere.hit_position(ray)
+        for light in scene.lights:
+            I_a = 0.1
+            I_P = light.intensity
+            k_a = obj_hit.material.ambient
+            k_s = obj_hit.material.specular
+            k_d = obj_hit.material.diffuse
+            f_att = light.attenuation_factor(self.get_distance(hit_pos, light))
+            n = obj_hit.material.n
+
+            ambient_color = I_a * k_a * obj_hit.material.color_at()
+            diffuse_color = I_P * f_att * k_d * max(0, normal.dot_product(light.position - hit_pos)) * obj_hit.material.color_at()
+            specular_color = I_P * f_att * k_s * max(0, normal.dot_product((light.position - hit_pos).normalize() + (hit_pos - scene.camera).normalize())) ** n
+
+            print(ambient_color, diffuse_color, specular_color)
+            color += ambient_color + diffuse_color + specular_color
             
-            if hit_position is not None:
-                t = np.linalg.norm(hit_position - ray.origin)  # Distance along the ray
-                if t < closest_t:
-                    closest_t = t
-                    closest_sphere = sphere
-        
-        return closest_sphere, closest_t
+        return color
     
-    def color_at(self, hit_position, sphere, sphere_list, hit_normal):
-        material = sphere.material
-        obj_color = material.color
-        black_color = np.zeros(3)
-        color = material.ambient * np.array(obj_color)
-        specular_k = 100  # You can use a fixed value or get it from material properties
-
-        for light in self.scene.lights:
-            to_light = Ray(hit_position, light.position - hit_position)
-            diffuse_intensity = max(0, hit_normal.dot(to_light.direction))
-
-            # print(hit_position, hit_normal)
-            # # # Diffuse shading
-            if diffuse_intensity > 0:
-                print("Diffuse intensity: ", diffuse_intensity)
-
-            color += np.array(obj_color) * material.diffuse * diffuse_intensity
-
-            # Specular shading
-            # view_dir = -to_light.direction  # Direction towards the camera
-            # reflect_dir = 2 * np.dot(hit_normal, to_light.direction) * hit_normal - to_light.direction
-            # specular_intensity = max(0, view_dir.dot(reflect_dir)) ** specular_k
-            # color += np.array(light.color) * material.specular * specular_intensity
-
-        color = np.clip(color, 0, 1)
-        # print("Color: ", color)
-        return np.array(color)
-
-
-
-    def create_ray(self, x, y):
-        # Normalize pixel coordinates to [-1, 1] range
-        aspect_ratio = self.width / self.height
-        normalized_x = (2 * (x + 0.5) / self.width - 1) * aspect_ratio
-        normalized_y = 1 - 2 * (y + 0.5) / self.height
-        return Ray((0, 0, -1), (normalized_x, normalized_y, 1))
+    def get_distance(self, hit_pos, light):
+        x = hit_pos.x - light.position.x
+        y = hit_pos.y - light.position.y
+        z = hit_pos.z - light.position.z
+        return np.sqrt(x**2 + y**2 + z**2)
     
-    def denormalize_color(self, color):
-        return (color[0] * 255, color[1] * 255, color[2] * 255)
 
-class Ray:
-    def __init__(self, origin, direction):
-        self.origin = np.array(origin)
-        self.direction = np.array(direction) / np.linalg.norm(direction)
+    def render_phong(self, obj_hit, hit_pos, normal, scene):
+    # Constants
 
-    def point_at_parameter(self, t):
-        return self.origin + t * self.direction
+        for light in scene.lights:
+            I_a = 0.1  # Ambient intensity
+            I_P = 1.0  # Incident light intensity
+            k_a = obj_hit.material.ambient  # Ambient reflection coefficient
+            k_d = obj_hit.material.diffuse  # Diffuse reflection coefficient
+            k_s = obj_hit.material.specular  # Specular reflection coefficient
+            n = obj_hit.material.n  # Shininess exponent
 
+            # Calculate the half vector (between view direction and light direction)
+            half_vector = (scene.camera - hit_pos).normalize()
+            # Ambient color
+            ambient_color = I_a * k_a * obj_hit.material.color_at()
 
+            # Diffuse color
+            light_direction = (light.position - hit_pos).normalize()
+            cos_theta = max(0, normal.dot_product(light_direction))
+            diffuse_color = I_P * cos_theta * k_d * obj_hit.material.color_at()
+
+            # Specular color
+            cos_alpha = max(0, normal.dot_product(half_vector))
+            specular_color = I_P * k_s * (cos_alpha ** n)
+
+            # Combine all components
+            print(ambient_color, diffuse_color, specular_color)
+            final_color = ambient_color + diffuse_color + specular_color
+            return final_color

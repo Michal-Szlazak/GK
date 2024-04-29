@@ -6,6 +6,9 @@ from image import Image
 from light import Light
 from material import Material
 from scene import Scene
+from color import Color
+from vector import Vector
+from point import Point
 
 colors_rgb = [
     (255, 102, 102),   # Light Red
@@ -37,25 +40,19 @@ colors_rgb = [
 
 class Model:
 
-    ray_tracer = RayTracer()
-    image = Image(600, 600)
-    light = Light((1.5, -0.5, -10), (1, 1, 1))
+    WIDTH = 600
+    HEIGHT = 600
+    camera = Vector(0, 0, -1)
+    objects = [
+        Sphere(Point(0, 0, 0), 0.5, Material(Color.from_ints(150, 1, 1)))
+        ]
+    lights = [
+        Light(Point(1.5, -0.5, -10.0), Color.from_ints(255, 255, 255))
+        ]
+    scene = Scene(camera, objects, lights, WIDTH, HEIGHT)
 
-    spheres = []
-    lights = []
-
-    def __init__(self):
-    
-        material_1 = Material((255, 0, 0), 0.5, 10, 10)
-        sphere1 = Sphere((0, 0, 50), 20, material=material_1)
-
-        self.spheres.append(sphere1)
-        self.lights.append(self.light)
-
-        self.scene = Scene(self.spheres, self.lights)
+    RayTracer = RayTracer()
 
     def print(self, window):
         
-        self.ray_tracer.render(window, self.spheres, self.image, self.scene)
-
-        # self.image.print(window)
+        self.RayTracer.render(self.scene, window)

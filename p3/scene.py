@@ -2,9 +2,9 @@
 
 class Scene:
 
-    def __init__(self, spheres, lights):
-        self.camera = (0, 0, 0)
-        self.spheres = spheres
+    def __init__(self, camera, objects, lights, width, height):
+        self.camera = camera
+        self.objects = objects
         self.lights = lights
-        self.width = 600
-        self.height = 600
+        self.width = width
+        self.height = height
