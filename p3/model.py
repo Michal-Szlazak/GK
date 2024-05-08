@@ -24,12 +24,12 @@ class Model:
     objects = [
         # Sphere(Point(0, 0, 0), 0.5, COPPER),
         # Sphere(Point(0, 0, 0), 0.5, WALL),
-        # Sphere(Point(0, 0, 1), 0.5, METALLIC),
-        # Sphere(Point(0, 0, 1), 0.5, PLASTIC),
-        Sphere(Point(-0.6, -0.6, 1.5), 0.5, METALLIC),
-        Sphere(Point(0.6, -0.6, 1.5), 0.5, WALL),
-        Sphere(Point(-0.6, 0.6, 1.5), 0.5, PLASTIC),
-        Sphere(Point(0.6, 0.6, 1.5), 0.5, WOOD)
+        # Sphere(Point(0, 0, 0), 0.5, METALLIC),
+        # Sphere(Point(0, 0, 0), 0.5, PLASTIC),
+        # Sphere(Point(-0.6, -0.6, 1.5), 0.5, METALLIC),
+        # Sphere(Point(0.6, -0.6, 1.5), 0.5, WALL),
+        # Sphere(Point(-0.6, 0.6, 1.5), 0.5, PLASTIC),
+        # Sphere(Point(0.6, 0.6, 1.5), 0.5, WOOD)
         ]
     lights = [
         Light(Point(-1, -1, -1), Color.from_ints(255, 255, 255)),
@@ -39,6 +39,36 @@ class Model:
 
     RayTracer = RayTracer()
 
-    def print(self, window):
+    def print(self, window, id):
+
+        lights = [
+            Light(Point(-1, -1, -1), Color.from_ints(255, 255, 255)),
+            # Light(Point(1, -1, -1), Color.from_ints(255, 255, 255))
+        ]
+
+        if id == 1:
+            self.objects = [
+                Sphere(Point(0, 0, 0), 0.5, self.METALLIC),
+            ]
+        elif id == 2:
+            self.objects = [
+                Sphere(Point(0, 0, 0), 0.5, self.WALL),
+            ]
+        elif id == 3:
+            self.objects = [
+                Sphere(Point(0, 0, 0), 0.5, self.PLASTIC),
+            ]
+        elif id == 4:
+            self.objects = [
+                Sphere(Point(0, 0, 0), 0.5, self.WOOD),
+            ]
+        elif id == 5:
+            self.objects = [
+                Sphere(Point(-0.6, -0.6, 1.5), 0.5, self.METALLIC),
+                Sphere(Point(0.6, -0.6, 1.5), 0.5, self.WALL),
+                Sphere(Point(-0.6, 0.6, 1.5), 0.5, self.PLASTIC),
+                Sphere(Point(0.6, 0.6, 1.5), 0.5, self.WOOD)
+            ]
+        self.scene = Scene(self.camera, self.objects, lights, self.WIDTH, self.HEIGHT)
         
         self.RayTracer.render(self.scene, window)

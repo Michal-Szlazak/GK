@@ -9,6 +9,7 @@ DARK_GRAY = Color(0.4, 0.4, 0.4)
 BLACK = Color(0.0, 0.0, 0.0)
 WHITE_SMOKE = Color(0.96078431372, 0.96078431372, 0.96078431372)
 
+
 class RayTracer:
     def render_pixel(self, i, j, x0, xstep, y0, ystep, camera, scene):
         x = x0 + i * xstep
@@ -53,7 +54,7 @@ class RayTracer:
         return (r, g, b)
 
     def ray_trace(self, ray, scene):
-        color = WHITE_SMOKE
+        color = DARK_GRAY
 
         dist_hit, obj_hit = self.find_nearest(ray, scene)
         if obj_hit is None:

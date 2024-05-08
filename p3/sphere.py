@@ -2,7 +2,6 @@ from math import sqrt
 
 
 class Sphere:
-    """Sphere is the only 3D shape implemented. Has center, radius and material"""
 
     def __init__(self, center, radius, material):
         self.center = center

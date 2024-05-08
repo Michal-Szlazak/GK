@@ -27,10 +27,36 @@ def main():
 
         if event.type == pygame.KEYDOWN:
                 
-            window.fill(DARK_GREY)
-            print("### Computing ###")
-            model.print(window)
-            print("### Window printed ###")
+            if event.key == pygame.K_1:
+                window.fill(DARK_GREY)
+                print("### Computing ###")
+                model.print(window, 1)
+                print("### Window printed ###")
+
+            if event.key == pygame.K_2:
+                window.fill(DARK_GREY)
+                print("### Computing ###")
+                model.print(window, 2)
+                print("### Window printed ###")
+
+            if event.key == pygame.K_3:
+                window.fill(DARK_GREY)
+                print("### Computing ###")
+                model.print(window, 3)
+                print("### Window printed ###")
+
+            if event.key == pygame.K_4:
+                window.fill(DARK_GREY)
+                print("### Computing ###")
+                model.print(window, 4)
+                print("### Window printed ###")
+
+            if event.key == pygame.K_5:
+                window.fill(DARK_GREY)
+                print("### Computing ###")
+                model.print(window, 5)
+                print("### Window printed ###")
+
             pygame.display.flip()
 
         pygame.display.flip()
